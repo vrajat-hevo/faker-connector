@@ -40,12 +40,38 @@ val baseMavenURL = "s3://hevo-artifacts/package/mvn"
 val releaseRepoURL = "$baseMavenURL/release"
 val snapshotRepoURL = "$baseMavenURL/snapshot"
 
+// Repositories configuration at the root level
+repositories {
+    maven {
+        name = "hevoMavenRelease"
+        url = uri("$releaseRepoURL")
+        credentials(AwsCredentials::class) {
+            accessKey = awsResponseJson["access_key"].orEmpty()
+            secretKey = awsResponseJson["secret_key"].orEmpty()
+            sessionToken = awsResponseJson["token"].orEmpty()
+        }
+    }
+
+    maven {
+        name = "hevoMavenSnapshot"
+        url = uri("$snapshotRepoURL")
+        credentials(AwsCredentials::class) {
+            accessKey = awsResponseJson["access_key"].orEmpty()
+            secretKey = awsResponseJson["secret_key"].orEmpty()
+            sessionToken = awsResponseJson["token"].orEmpty()
+        }
+    }
+
+    mavenCentral() // Add Maven Central for other dependencies
+    google()
+}
+
 dependencies {
     implementation("io.hevo:hevo-sdk:1.9.0-SNAPSHOT")
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.mockito:mockito-junit-jupiter")
-    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.19.0")
+    testImplementation("org.mockito:mockito-core:5.19.0")
 }
 
 // Spotless plugin configuration at the root level
@@ -89,4 +115,10 @@ tasks.shadowJar {
     }
     // Merging Service Files
     mergeServiceFiles()
+}
+
+defaultTasks("jar", "shadowJar")
+application {
+    // Define the main class for the application
+    mainClass.set("io.hevo.connector.application.Main")
 }

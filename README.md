@@ -17,3 +17,6 @@ Major sections in `build.gradle.kts` are missing. The following sections were co
 - downloadCredentials
 - spotless
 - tasks (jar, shadowJar)
+
+# Open Questions
+- How does a developer get the latest version of hevo-sdk?
