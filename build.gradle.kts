@@ -2,7 +2,7 @@ import java.net.URL
 import java.util.Base64
 
 plugins {
-    `java`
+    java
     id("application")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("com.diffplug.spotless") version "6.20.0"
@@ -68,6 +68,8 @@ repositories {
 
 dependencies {
     implementation("io.hevo:hevo-sdk:1.9.0-SNAPSHOT")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
+    implementation("net.datafaker:datafaker:2.4.4")
     testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-junit-jupiter:5.19.0")
@@ -98,7 +100,7 @@ tasks.jar {
         attributes["Main-Class"] = "io.hevo.connector.application.Main"
     }
 
-    from(configurations.runtimeClasspath.get().map({ if (it.isDirectory) it else zipTree(it) }))
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 
     // Exclude specific files from being included in the JAR's META-INF
     exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")

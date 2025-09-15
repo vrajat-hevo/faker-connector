@@ -11,12 +11,12 @@ cp -r ../hevo-sdk/test-connector/* .
 
 ## Gradle Configuration
 
-Major sections in `build.gradle.kts` are missing. The following sections were copied from `sqlserver-connector` and modified to suit this connector.
+Major sections in `build.gradle.kts` are missing. The following sections were copied from `sqlserver-connector` and modified to suit this connector. 
 
-- plugins
-- downloadCredentials
-- spotless
-- tasks (jar, shadowJar)
+Add `gradle.properties` and `settings.gradle.kts` files. 
 
 # Open Questions
 - How does a developer get the latest version of hevo-sdk?
+- - I checked the releases tab in github repo.
+
+
