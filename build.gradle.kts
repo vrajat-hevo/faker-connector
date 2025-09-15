@@ -95,6 +95,17 @@ spotless {
     }
 }
 
+tasks.test {
+    // Use JUnit Platform
+    useJUnitPlatform()
+
+    // Set a pattern to include or exclude specific tests
+    filter {
+        // Example: Include only tests with 'Test' in their name
+        includeTestsMatching("*Test")
+    }
+}
+
 tasks.jar {
     manifest {
         attributes["Main-Class"] = "io.hevo.connector.application.Main"

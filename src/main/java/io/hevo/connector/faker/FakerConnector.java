@@ -20,7 +20,7 @@ import java.util.*;
 import net.datafaker.Faker;
 
 @Group(type = Group.Type.CONNECTION, title = "Faker Connector", order = 1)
-public class FakeConnector implements GenericConnector {
+public class FakerConnector implements GenericConnector {
   @Property(
       name = "Schema Source",
       displayName = "Schema Source",
