@@ -50,11 +50,11 @@ public class FakerConnector implements GenericConnector {
       fieldOrder = 3)
   private String filePath;
 
-  record Column(String name, String type) {}
+  public record Column(String name, String type) {}
 
-  record Table(String name, List<Column> columns) {}
+  public record Table(String name, List<Column> columns) {}
 
-  record Schema(String name, Map<String, Table> tables) {}
+  public record Schema(String name, Map<String, Table> tables) {}
 
   private Schema schema;
 
@@ -77,6 +77,14 @@ public class FakerConnector implements GenericConnector {
     }
   }
 
+  public Schema getSchema() {
+    return schema;
+  }
+
+  public void setSchema(Schema schema) {
+    this.schema = schema;
+  }
+
   @Override
   public java.util.List<ObjectDetails> getObjects() {
     if (schema == null || schema.tables() == null) {
@@ -84,13 +92,14 @@ public class FakerConnector implements GenericConnector {
     }
     List<ObjectDetails> objects = new ArrayList<>();
     for (Map.Entry<String, Table> entry : schema.tables.entrySet()) {
-      ObjectDetails.builder()
-          .catalog("Faker")
-          .schema(schema.name())
-          .table(entry.getKey())
-          .type("TABLE")
-          .sourceObjectStatus(SourceObjectStatus.ACTIVE)
-          .build();
+      objects.add(
+          ObjectDetails.builder()
+              .catalog("Faker")
+              .schema(schema.name())
+              .table(entry.getKey())
+              .type("TABLE")
+              .sourceObjectStatus(SourceObjectStatus.ACTIVE)
+              .build());
     }
     return objects;
   }
@@ -124,22 +133,20 @@ public class FakerConnector implements GenericConnector {
         List<Column> columns = table.columns();
         int position = 0;
         for (Column column : columns) {
-          HField field = null;
-          if (column.type.equals("INT")) {
-            field =
-                new HIntegerField.Builder(column.name, column.type, position, FieldState.ACTIVE)
+          HField field =
+              switch (column.type) {
+                case "INT" -> new HIntegerField.Builder(
+                        column.name, column.type, position, FieldState.ACTIVE)
                     .build();
-          } else if (column.type.equals("STRING")) {
-            field =
-                new HVarcharField.Builder(column.name, column.type, position, FieldState.ACTIVE)
+                case "STRING" -> new HVarcharField.Builder(
+                        column.name, column.type, position, FieldState.ACTIVE)
                     .build();
-          } else if (column.type.equals("FLOAT")) {
-            field =
-                new HDoubleField.Builder(column.name, column.type, position, FieldState.ACTIVE)
+                case "FLOAT" -> new HDoubleField.Builder(
+                        column.name, column.type, position, FieldState.ACTIVE)
                     .build();
-          } else {
-            field = new HUnsupportedField.Builder(column.name, column.type, position).build();
-          }
+                default -> new HUnsupportedField.Builder(column.name, column.type, position)
+                    .build();
+              };
 
           fields.add(field);
           position++;
@@ -172,7 +179,7 @@ public class FakerConnector implements GenericConnector {
     return new ExecutionResult(Map.of(details, new ExecutionResultStats(100L)), null, false);
   }
 
-  private List<HStruct> generateRows(ObjectSchema schema, List<Field> selectedFields) {
+  public List<HStruct> generateRows(ObjectSchema schema, List<Field> selectedFields) {
     List<HStruct> rows = new ArrayList<>();
     Faker faker = new Faker();
     for (int i = 0; i < 100; i++) {
