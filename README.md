@@ -43,6 +43,17 @@ Example:
 
 Is there a better way or documented way for Dependency Injection in tests?
 
+### GenericTestConnector
+
+- GenericTestConnector is not part of `hevo-sdk` and files have to be copied over. Is there a better way to reuse this code?
+- It is in main/source code root. Should it be in test/source code root along with an example of how to use it.
+- Also there is no way to integrate it with mvn/gradle test framework.
+- Configuration requires reflection. Code is available but developer may have to understand it to debug config issues.
+- executeConnector uses prompts to test different features.
+- executeConnector has to be edited to manage offsets.
+- Run through Intellij (easiest)
+- 
+
 # Open Questions
 - How does a developer get the latest version of hevo-sdk?
 - - I checked the releases tab in github repo.
